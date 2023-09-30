@@ -1,0 +1,26 @@
+#version 330 core
+layout (location = 0) in vec4 aPos;
+layout (location = 1) in vec3 aColor;
+
+out vec3 vColor;
+
+uniform float zConstOffset;
+uniform mat4 model;
+uniform mat4 projection;
+
+void main() {
+
+    vec4 modelCoord = model * aPos;
+    // hardcode camera position at (0,0,3)
+    vec4 viewCoord = vec4(modelCoord.x, modelCoord.y, modelCoord.z - 3.0,
+modelCoord.w);
+
+    vec4 almostProjCoord = projection * viewCoord;
+
+    gl_Position = vec4(
+        almostProjCoord.x,
+        almostProjCoord.y,
+        almostProjCoord.z + zConstOffset,
+        almostProjCoord.w);
+    vColor = aColor;
+}
